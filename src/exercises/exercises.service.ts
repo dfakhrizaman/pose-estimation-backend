@@ -17,9 +17,9 @@ export class ExercisesService {
 
     try {
       await this.conn.query(
-        `INSERT INTO public."exercise"
-        ("type", duration, score, user_id)
-        VALUES('${payload.type}', ${payload.duration}, ${payload.score}, '${userId}');`,
+        `INSERT INTO public."exercise" ("type", duration, score, user_id, username)
+            VALUES('${payload.type}', ${payload.duration}, ${payload.score}, '${userId}', 
+            (SELECT username FROM public."user" WHERE id = '${userId}'));`,
       );
 
       return {
@@ -34,7 +34,7 @@ export class ExercisesService {
   async getExercises() {
     try {
       const result = await this.conn.query(
-        'SELECT id, "type", duration, score, completed_at, user_id FROM public."exercise"',
+        'SELECT id, "type", duration, score, completed_at, user_id, username FROM public."exercise"',
       );
       return {
         data: result.rows,
