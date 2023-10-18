@@ -50,7 +50,7 @@ export class UsersService {
   async getOneByUsername(username: string): Promise<User> {
     try {
       const result = await this.conn.query(
-        `SELECT id, username, password FROM public."user" WHERE username='${username}'`,
+        `SELECT id, username, password, age, height, weight, sex FROM public."user" WHERE username='${username}'`,
       );
       return result.rows[0];
     } catch (error) {
