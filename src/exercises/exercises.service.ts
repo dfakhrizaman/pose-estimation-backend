@@ -34,7 +34,7 @@ export class ExercisesService {
   async getExercises() {
     try {
       const result = await this.conn.query(
-        'SELECT id, "type", duration, score, completed_at, user_id, username FROM public."exercise"',
+        'SELECT id, "type", duration, score, completed_at, user_id, username FROM public."exercise" ORDER BY completed_at DESC',
       );
       return {
         data: result.rows,
