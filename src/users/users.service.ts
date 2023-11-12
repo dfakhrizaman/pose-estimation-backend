@@ -29,6 +29,66 @@ export class UsersService {
     }
   }
 
+  async getUsersLeaderboard() {
+    try {
+      const result = await this.conn.query(`
+      SELECT
+        public."user".id AS user_id,
+        public."user".username,
+        COUNT(public."exercise".id) AS exercise_count
+      FROM
+        public."user"
+      LEFT JOIN
+        public."exercise" ON public."user".id = public."exercise".user_id
+      WHERE
+        public."exercise".completed_at >= CURRENT_DATE - INTERVAL '7 days' OR public."exercise".completed_at IS NULL
+      GROUP BY
+        public."user".id, public."user".username
+      ORDER BY
+        exercise_count DESC;
+      `);
+
+      return {
+        data: result.rows,
+      };
+    } catch (error) {
+      throw new NotFoundException();
+    }
+  }
+
+  async getUsersByLatestExercise() {
+    try {
+      const result = await this.conn.query(`
+      SELECT
+        public."user".id AS user_id,
+        public."user".username AS user_username,
+        public."exercise".id AS exercise_id,
+        public."exercise"."type" AS exercise_type,
+        public."exercise".duration AS exercise_duration,
+        public."exercise".score AS exercise_score,
+        public."exercise".completed_at AS latest_completed_at
+      FROM
+        public."user"
+      LEFT JOIN
+        public."exercise" ON public."user".id = public."exercise".user_id
+      WHERE
+        public."exercise".completed_at = (
+          SELECT MAX(completed_at)
+          FROM public."exercise"
+          WHERE user_id = public."user".id
+        )
+      ORDER BY
+        latest_completed_at DESC;
+      `);
+
+      return {
+        data: result.rows,
+      };
+    } catch (error) {
+      throw new NotFoundException();
+    }
+  }
+
   async getOne(id: string) {
     try {
       const result = await this.conn.query(

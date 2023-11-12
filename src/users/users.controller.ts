@@ -17,6 +17,16 @@ export class UsersController {
     };
   }
 
+  @Get('/leaderboard')
+  getLeaderboard() {
+    return this.usersService.getUsersLeaderboard();
+  }
+
+  @Get('/latest-exercise')
+  getUsersByLatestExercise() {
+    return this.usersService.getUsersByLatestExercise();
+  }
+
   @UseGuards(AuthGuard)
   @Get('/profile')
   getUserDetail(@GetUserId() userId: string) {
