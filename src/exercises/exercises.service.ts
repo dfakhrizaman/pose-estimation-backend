@@ -17,8 +17,8 @@ export class ExercisesService {
 
     try {
       await this.conn.query(
-        `INSERT INTO public."exercise" ("type", duration, score, user_id, username)
-            VALUES('${payload.type}', ${payload.duration}, ${payload.score}, '${userId}', 
+        `INSERT INTO public."exercise" ("type", duration, score, user_id, accuracy, username)
+            VALUES('${payload.type}', ${payload.duration}, ${payload.score}, ${payload.accuracy}, '${userId}', 
             (SELECT username FROM public."user" WHERE id = '${userId}'));`,
       );
 

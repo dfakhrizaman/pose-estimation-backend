@@ -1,4 +1,11 @@
-import { IsEnum, IsNumber, IsString, Max, Min } from 'class-validator';
+import {
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 import { ExerciseType } from '../enum/exercise.enum';
 
 export class CreateExerciseDto {
@@ -13,4 +20,9 @@ export class CreateExerciseDto {
   @Min(0)
   @Max(10)
   readonly score: number;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  readonly accuracy: number;
 }
